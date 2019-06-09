@@ -1,2 +1,2 @@
 # tally-tab-login-service
-The Login Micro service for tallytab
+The login microservice for TallyTab.
