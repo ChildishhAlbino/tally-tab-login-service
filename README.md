@@ -1,2 +1,1 @@
-# tally-tab-login-service
-The login microservice for TallyTab.
+# Readme coming soon
