@@ -1,0 +1,15 @@
+{
+	"name": "tallytab-login-service-rest",
+	"version": "1.0.0",
+	"description": "A Microservice that controls login and auth for TallyTab",
+	"main": "server.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node server.js"
+	},
+	"author": "Connor Williams",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.17.1"
+	}
+}
