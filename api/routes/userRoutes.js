@@ -9,13 +9,14 @@ router.get('/', (req, res, next) => {
 
 router.get('/:userID', (req, res, next) => {
 	res.status(200).json({
-		message: 'Handling login request'
+		message: 'Handling GET userID request'
 	});
 });
 
 router.patch('/:userID', (req, res, next) => {
 	res.status(200).json({
-		message: 'Handling login request'
+		message: 'Handling PATCH request to change user data.',
+		id: id
 	});
 });
 
