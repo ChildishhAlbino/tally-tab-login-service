@@ -12,9 +12,7 @@ mongoose.connect(
 	'mongodb+srv://admin:' +
 		process.env.MONGO_ADMIN_PASSWORD +
 		'@tallytab-yqcjf.mongodb.net/test?retryWrites=true&w=majority',
-	{
-		useMongoClient: true
-	}
+	{ useNewUrlParser: true }
 );
 
 app.use(morgan('dev'));
