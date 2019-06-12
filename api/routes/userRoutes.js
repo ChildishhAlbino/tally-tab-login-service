@@ -35,10 +35,20 @@ router.patch('/:userID', (req, res, next) => {
 
 router.delete('/:userID', (req, res, next) => {
 	const id = req.params.userID;
-	res.status(200).json({
-		message: 'Handling DELETE request for given ID',
-		id: id
-	});
+	User.deleteOne({ _id: id })
+		.exec()
+		.then((result) => {
+			res.status(200).json({
+				message: 'Handling DELETE request for user.',
+				deletedID: id,
+				deletedCount: result.deletedCount
+			});
+		})
+		.catch((err) => {
+			res.status(500).json({
+				error: err
+			});
+		});
 });
 
 module.exports = router;
