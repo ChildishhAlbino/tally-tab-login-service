@@ -27,10 +27,26 @@ router.get('/:userID', (req, res, next) => {
 });
 
 router.patch('/:userID', (req, res, next) => {
-	res.status(200).json({
-		message: 'Handling PATCH request to change user data.',
-		id: id
-	});
+	const id = req.params.userID;
+	const patches = {};
+	for (const patch of req.body) {
+		patches[patch.propName] = patch.value;
+	}
+	User.updateOne({ _id: id }, { $set: patches })
+		.exec()
+		.then((result) => {
+			res.status(200).json({
+				message: 'Handling PATCH request to change user data.',
+				patchedId: id,
+				appliedPatches: patches,
+				result: result
+			});
+		})
+		.catch((err) => {
+			res.status(500).json({
+				error: err
+			});
+		});
 });
 
 router.delete('/:userID', (req, res, next) => {
