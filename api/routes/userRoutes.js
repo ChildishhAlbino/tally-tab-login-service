@@ -21,9 +21,21 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:userID', (req, res, next) => {
-	res.status(200).json({
-		message: 'Handling GET userID request'
-	});
+	const id = req.params.userID;
+	User.findById(id)
+		.exec()
+		.then((doc) => {
+			console.log(doc);
+			res.status(200).json({
+				message: 'Handling GET request for specific user',
+				userInfo: doc
+			});
+		})
+		.catch((err) => {
+			res.status(500).json({
+				error: err
+			});
+		});
 });
 
 router.patch('/:userID', (req, res, next) => {
