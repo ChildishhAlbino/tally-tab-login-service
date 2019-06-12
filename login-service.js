@@ -1,12 +1,21 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-
+const mongoose = require('mongoose');
 const loginRoute = require('./api/routes/loginRoutes');
 const signupRoute = require('./api/routes/signupRoutes');
 const userRoutes = require('./api/routes/userRoutes');
 
 const app = express();
+
+mongoose.connect(
+	'mongodb+srv://admin:' +
+		process.env.MONGO_ADMIN_PASSWORD +
+		'@tallytab-yqcjf.mongodb.net/test?retryWrites=true&w=majority',
+	{
+		useMongoClient: true
+	}
+);
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
