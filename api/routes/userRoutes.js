@@ -4,12 +4,17 @@ const User = require('../models/user');
 
 router.get('/', (req, res, next) => {
 	User.find()
+		.select('_id email passwordHash')
 		.exec()
 		.then((docs) => {
-			console.log(docs);
 			res.status(200).json({
 				message: 'Handling GET request for all users.',
-				users: docs
+				users: docs.map(({ _id }) => {
+					return {
+						userID: _id,
+						requests: [ { type: 'GET', url: `/users/${_id}`, validationRequired: false } ]
+					};
+				})
 			});
 		})
 		.catch((err) => {
@@ -22,13 +27,19 @@ router.get('/', (req, res, next) => {
 router.get('/:userID', (req, res, next) => {
 	const id = req.params.userID;
 	User.findById(id)
+		.select('_id email passwordHash')
 		.exec()
 		.then((doc) => {
-			console.log(doc);
-			res.status(200).json({
-				message: 'Handling GET request for specific user',
-				userInfo: doc
-			});
+			if (doc) {
+				res.status(200).json({
+					message: 'Handling GET request for specific user',
+					userInfo: doc
+				});
+			} else {
+				res.status(404).json({
+					message: 'No user found with that ID'
+				});
+			}
 		})
 		.catch((err) => {
 			res.status(500).json({
