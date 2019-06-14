@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require('../models/user');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const errorController = require('../controllers/error-controller');
 
 router.post('/', (req, res, next) => {
 	/* Takes a email and password and hashes it with BCrypt's
