@@ -18,9 +18,7 @@ router.get('/', (req, res, next) => {
 			});
 		})
 		.catch((err) => {
-			res.status(500).json({
-				error: err
-			});
+			next(err);
 		});
 });
 
@@ -42,9 +40,7 @@ router.get('/:userID', (req, res, next) => {
 			}
 		})
 		.catch((err) => {
-			res.status(500).json({
-				error: err
-			});
+			next(err);
 		});
 });
 
@@ -65,9 +61,7 @@ router.patch('/:userID', (req, res, next) => {
 			});
 		})
 		.catch((err) => {
-			res.status(500).json({
-				error: err
-			});
+			next(err);
 		});
 });
 
@@ -83,9 +77,7 @@ router.delete('/:userID', (req, res, next) => {
 			});
 		})
 		.catch((err) => {
-			res.status(500).json({
-				error: err
-			});
+			next(err);
 		});
 });
 
