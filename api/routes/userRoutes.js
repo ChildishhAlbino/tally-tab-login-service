@@ -46,10 +46,7 @@ router.get('/:userID', (req, res, next) => {
 
 router.patch('/:userID', (req, res, next) => {
 	const id = req.params.userID;
-	const patches = {};
-	for (const patch of req.body) {
-		patches[patch.propName] = patch.value;
-	}
+	const patches = req.body.patches;
 	User.updateOne({ _id: id }, { $set: patches })
 		.exec()
 		.then((result) => {
