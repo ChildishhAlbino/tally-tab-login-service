@@ -1,5 +1,3 @@
-const express = require('express');
-const router = express.Router();
 const User = require('../models/user');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
@@ -21,7 +19,6 @@ const SIGNUP_ROUTINE = async (req, res, next) => {
 			const hash = await HASH_USER_PASSWORD(req.body);
 			const user = CREATE_USER_OBJECT(req.body, hash);
 			await SAVE_USER(user);
-
 			return res.status(201).json({
 				message: 'Handling sign-up request',
 				createdUser: user._id,
