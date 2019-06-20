@@ -99,3 +99,34 @@ const GET_ALL_USERS = async () => {
 };
 
 module.exports.GET_ALL_USERS_ROUTINE = GET_ALL_USERS_ROUTINE;
+
+const GET_USER_BY_ID_ROUTINE = async (req, res, next) => {
+	/*
+		When provided a userID, searches the database for a matching item;
+		Returns the user data if valid ID, 200 status code. 
+		Returns 404 if no user data found.
+		Returns 500 if error occurred.
+	*/
+	try {
+		const user = await GET_USER_BY_ID(req.params.userID);
+		if (user) {
+			res.status(200).json({
+				message: 'Handling GET request for specific user',
+				userInfo: user
+			});
+		} else {
+			res.status(404).json({
+				message: 'No user found with that ID'
+			});
+		}
+	} catch (err) {
+		next(err);
+	}
+};
+
+const GET_USER_BY_ID = async (userID) => {
+	const user = await User.findById(userID).select('_id email passwordHash').exec();
+	return user;
+};
+
+module.exports.GET_USER_BY_ID_ROUTINE = GET_USER_BY_ID_ROUTINE;

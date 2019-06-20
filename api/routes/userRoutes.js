@@ -5,27 +5,7 @@ const controller = require('../controllers/controller');
 
 router.get('/', controller.GET_ALL_USERS_ROUTINE);
 
-router.get('/:userID', (req, res, next) => {
-	const id = req.params.userID;
-	User.findById(id)
-		.select('_id email passwordHash')
-		.exec()
-		.then((doc) => {
-			if (doc) {
-				res.status(200).json({
-					message: 'Handling GET request for specific user',
-					userInfo: doc
-				});
-			} else {
-				res.status(404).json({
-					message: 'No user found with that ID'
-				});
-			}
-		})
-		.catch((err) => {
-			next(err);
-		});
-});
+router.get('/:userID', controller.GET_USER_BY_ID_ROUTINE);
 
 router.patch('/:userID', (req, res, next) => {
 	const id = req.params.userID;
