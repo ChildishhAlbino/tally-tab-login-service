@@ -4,11 +4,11 @@ const bcrypt = require('bcrypt');
 
 const SIGNUP_ROUTINE = async (req, res, next) => {
 	/* 
-    * Check if user exists in database already, return 409 if true.
-    * If false, hash their password.
-    * Store the user
-    * Return 200 if all worked
-    * Return 500 if error occurred
+    Check if user exists in database already, return 409 if true.
+    If false, hash their password.
+    Store the user
+    Return 200 if all worked
+    Return 500 if error occurred
     */
 	try {
 		if (await CHECK_USER_EXISTS(req.body.email)) {
@@ -69,3 +69,33 @@ const SAVE_USER = async (user) => {
 };
 
 module.exports.SIGNUP_ROUTINE = SIGNUP_ROUTINE;
+
+const GET_ALL_USERS_ROUTINE = async (req, res, next) => {
+	/* Retrieves all users from the database and returns them in an array nested inside a JSON Object3
+	--------------------------------------------------------------
+	Returns 200 if everything worked successfully.
+	Returns 500 if an error occurred during the process.
+	*/
+	try {
+		const docs = await GET_ALL_USERS();
+		res.status(200).json({
+			message: 'Handling GET request for all users.',
+			totalUserCount: docs.length,
+			users: docs.map(({ _id }) => {
+				return {
+					userID: _id,
+					requests: [ { type: 'GET', url: `/users/${_id}`, validationRequired: false } ]
+				};
+			})
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
+const GET_ALL_USERS = async () => {
+	const docs = await User.find().select('_id email passwordHash').exec();
+	return docs;
+};
+
+module.exports.GET_ALL_USERS_ROUTINE = GET_ALL_USERS_ROUTINE;

@@ -1,32 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const controller = require('../controllers/controller');
 
-router.get('/', (req, res, next) => {
-	/* Retrieves all users from the database and returns them in an array nested inside a JSON Object3
-	--------------------------------------------------------------
-	Returns 200 if everything worked successfully.
-	Returns 500 if an error occurred during the process.
-	*/
-	User.find()
-		.select('_id email passwordHash')
-		.exec()
-		.then((docs) => {
-			res.status(200).json({
-				message: 'Handling GET request for all users.',
-				totalUserCount: docs.length,
-				users: docs.map(({ _id }) => {
-					return {
-						userID: _id,
-						requests: [ { type: 'GET', url: `/users/${_id}`, validationRequired: false } ]
-					};
-				})
-			});
-		})
-		.catch((err) => {
-			next(err);
-		});
-});
+router.get('/', controller.GET_ALL_USERS_ROUTINE);
 
 router.get('/:userID', (req, res, next) => {
 	const id = req.params.userID;
