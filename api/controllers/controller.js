@@ -130,3 +130,54 @@ const GET_USER_BY_ID = async (userID) => {
 };
 
 module.exports.GET_USER_BY_ID_ROUTINE = GET_USER_BY_ID_ROUTINE;
+
+const PATCH_USER_DETAILS_ROUTINE = async (req, res, next) => {
+	/* 
+		Takes a set of patches and a userID and patches the given user's information
+		Returns 200 if all worked.
+		Returns 404 if no user was found.
+		Returns 500 if error occurred.
+		Returns 403 if user attempts to change password hash directly.
+	*/
+	/* 
+		Check if user is attempting to patch password. Hash it then patch.
+		Check if user is attempting to patch email, check their new one isn't already in use.
+	*/
+	try {
+		const user = await GET_USER_BY_ID(req.params.userID);
+		if (user) {
+			const patches = req.body.patches;
+			if (patches.passwordHash) {
+				res.status(403).json({
+					message: 'Users cannot update passwordHash field directly.'
+				});
+			}
+			if (patches.password) {
+				console.log('Hashing password before patch');
+				const hash = await HASH_USER_PASSWORD(patches);
+				patches.passwordHash = hash;
+				delete patches.password;
+			}
+			const result = await PATCH_USER_DETAILS(req.params, req.body);
+			res.status(200).json({
+				message: 'Handling PATCH request to change user data.',
+				patchedId: user._id,
+				attemptedPatches: req.body.patches,
+				result: result
+			});
+		} else {
+			res.status(404).json({
+				message: 'No user found with that ID.'
+			});
+		}
+	} catch (err) {
+		next(err);
+	}
+};
+
+const PATCH_USER_DETAILS = async ({ userID }, { patches }) => {
+	const result = await User.updateOne({ _id: userID }, { $set: patches }).exec();
+	return result;
+};
+
+module.exports.PATCH_USER_DETAILS_ROUTINE = PATCH_USER_DETAILS_ROUTINE;

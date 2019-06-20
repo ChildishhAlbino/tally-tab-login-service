@@ -7,23 +7,7 @@ router.get('/', controller.GET_ALL_USERS_ROUTINE);
 
 router.get('/:userID', controller.GET_USER_BY_ID_ROUTINE);
 
-router.patch('/:userID', (req, res, next) => {
-	const id = req.params.userID;
-	const patches = req.body.patches;
-	User.updateOne({ _id: id }, { $set: patches })
-		.exec()
-		.then((result) => {
-			res.status(200).json({
-				message: 'Handling PATCH request to change user data.',
-				patchedId: id,
-				appliedPatches: patches,
-				result: result
-			});
-		})
-		.catch((err) => {
-			next(err);
-		});
-});
+router.patch('/:userID', controller.PATCH_USER_DETAILS_ROUTINE);
 
 router.delete('/:userID', (req, res, next) => {
 	const id = req.params.userID;
