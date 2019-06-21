@@ -148,7 +148,7 @@ const PATCH_USER_DETAILS_ROUTINE = async (req, res, next) => {
 		if (user) {
 			const patches = req.body.patches;
 			if (patches.passwordHash) {
-				res.status(403).json({
+				return res.status(403).json({
 					message: 'Users cannot update passwordHash field directly.'
 				});
 			}
