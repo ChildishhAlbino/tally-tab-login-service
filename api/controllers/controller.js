@@ -147,6 +147,9 @@ const PATCH_USER_DETAILS_ROUTINE = async (req, res, next) => {
 		const user = await GET_USER_BY_ID(req.params.userID);
 		if (user) {
 			const patches = req.body.patches;
+			if (!patches) {
+				throw new Error('Patches cannot be undefined for the endpoint.');
+			}
 			if (patches.passwordHash) {
 				return res.status(403).json({
 					message: 'Users cannot update passwordHash field directly.'
