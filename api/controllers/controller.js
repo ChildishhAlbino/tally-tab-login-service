@@ -189,3 +189,29 @@ const PATCH_USER_DETAILS = async ({ userID }, { patches }) => {
 };
 
 module.exports.PATCH_USER_DETAILS_ROUTINE = PATCH_USER_DETAILS_ROUTINE;
+
+const DELETE_USER_ROUTINE = async (req, res, next) => {
+	/* 
+		Delete the value associated with the given ID
+		Returns 200 if everything works correctly.
+		Returns 401 if auth failed.
+		Returns 500 if an error occurs.
+	*/
+
+	try {
+		const id = req.params.userID;
+		const result = await DELETE_USER_OBJECT(id);
+		res.status(200).json({
+			message: 'Handling DELETE request for user.',
+			deletedID: id,
+			deletedCount: result.deletedCount
+		});
+	} catch (err) {
+		next(err);
+	}
+};
+
+const DELETE_USER_OBJECT = async (userID) => {
+	return await User.deleteOne({ _id: userID }).exec();
+};
+module.exports.DELETE_USER_ROUTINE = DELETE_USER_ROUTINE;
