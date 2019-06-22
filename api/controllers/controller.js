@@ -152,6 +152,13 @@ const PATCH_USER_DETAILS_ROUTINE = async (req, res, next) => {
 					message: 'Users cannot update passwordHash field directly.'
 				});
 			}
+			if (patches.email) {
+				if (await CHECK_USER_EXISTS(patches.email)) {
+					return res.status(409).json({
+						message: 'Email exists already'
+					});
+				}
+			}
 			if (patches.password) {
 				console.log('Hashing password before patch');
 				const hash = await HASH_USER_PASSWORD(patches);
@@ -159,11 +166,12 @@ const PATCH_USER_DETAILS_ROUTINE = async (req, res, next) => {
 				delete patches.password;
 			}
 			const result = await PATCH_USER_DETAILS(req.params, req.body);
+			const numChanges = result.nModified;
 			res.status(200).json({
 				message: 'Handling PATCH request to change user data.',
 				patchedId: user._id,
 				attemptedPatches: req.body.patches,
-				result: result
+				numChanges: numChanges
 			});
 		} else {
 			res.status(404).json({
