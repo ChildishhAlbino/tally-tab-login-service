@@ -160,18 +160,17 @@ const PATCH_USER_DETAILS_ROUTINE = async (req, res, next) => {
 				}
 			}
 			if (patches.password) {
-				console.log('Hashing password before patch');
 				const hash = await HASH_USER_PASSWORD(patches);
 				patches.passwordHash = hash;
 				delete patches.password;
 			}
 			const result = await PATCH_USER_DETAILS(req.params, req.body);
-			const numChanges = result.nModified;
+			const patchCount = result.nModified;
 			res.status(200).json({
 				message: 'Handling PATCH request to change user data.',
 				patchedId: user._id,
 				attemptedPatches: req.body.patches,
-				numChanges: numChanges
+				patchCount: patchCount
 			});
 		} else {
 			res.status(404).json({
